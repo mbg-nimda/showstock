@@ -94,7 +94,7 @@ public class FXMLCreateChart implements Initializable {
     }
 
     @FXML
-    private void addTicker(ActionEvent event) {        
+    private void addTicker(ActionEvent event) {
         DatabaseManager.manageTickers(console);
     }
 
@@ -130,7 +130,7 @@ public class FXMLCreateChart implements Initializable {
     private void report(ActionEvent event) {
         try {
             String repdate = enddate.getValue().toString();
-            try (PrintWriter out = new PrintWriter(String.format("%s/report.csv", 
+            try (PrintWriter out = new PrintWriter(String.format("%s/report.csv",
                     CreateChart.home))) {
                 ObservableList items = tickers.getItems();
                 String maxs = window.getText();
@@ -234,7 +234,6 @@ public class FXMLCreateChart implements Initializable {
 //        window.setText(Integer.toString(win));
 //        displaydata(event);
 //    }
-
     @FXML
     private void incrwindow(ActionEvent event) {
         String wins = window.getText();
@@ -306,15 +305,16 @@ public class FXMLCreateChart implements Initializable {
                 seriesp.getData().add(new XYChart.Data(-i, poly.value(i) + del));
                 seriesm.getData().add(new XYChart.Data(-i, poly.value(i) - del));
             }
-            linechart.getData().add(seriese);
         } else {
             for (int i = 0; i < max; i++) {
                 seriesv.getData().add(new XYChart.Data(-i, values[i] - poly.value(i)));
+                seriese.getData().add(new XYChart.Data(-i, 0.0));
                 seriesp.getData().add(new XYChart.Data(-i, del));
                 seriesm.getData().add(new XYChart.Data(-i, -del));
             }
         }
-        linechart.setHorizontalZeroLineVisible(!NormalView);
+//        linechart.setHorizontalZeroLineVisible(!NormalView);
+        linechart.getData().add(seriese);
         linechart.getData().add(seriesv);
         linechart.getData().add(seriesp);
         linechart.getData().add(seriesm);
