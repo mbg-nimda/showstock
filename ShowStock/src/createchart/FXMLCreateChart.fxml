@@ -28,7 +28,7 @@
                     <MenuItem mnemonicParsing="false" onAction="#populate" text="Populate database" />
                     <MenuItem mnemonicParsing="false" onAction="#report" text="Report" />
                     <MenuItem mnemonicParsing="false" onAction="#alarms" text="Alarms" />
-                  <MenuItem mnemonicParsing="false" onAction="#predict" text="Predicrtion" />
+                  <MenuItem mnemonicParsing="false" onAction="#predict" text="Prediction" />
                     <MenuItem mnemonicParsing="false" text="Export to csv" />
                   </items>
                 </Menu>
