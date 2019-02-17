@@ -30,6 +30,8 @@ public class Tickermngmnt extends javax.swing.JFrame {
         myconsole = console;
         myhome = home;
         mystm = stm;
+        myconsole.setFocusable(true);
+        myconsole.setVisible(true);
     }
 
     /**
@@ -123,26 +125,38 @@ public class Tickermngmnt extends javax.swing.JFrame {
 
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
         try {
-            String cmd = String.format("insert into tickers(symb, name) values (%s, %s)",
+            String cmd = String.format("insert into tickers(symb, name) values (\"%s\", \"%s\")",
                     symbol.getText(),
                     descr.getText()
             );
             mystm.executeUpdate(cmd);
+            myconsole.textArea.append("ticker successfully added to the database.\n");
         } catch (SQLException ex) {
             Logger.getLogger(Tickermngmnt.class.getName()).log(Level.SEVERE, null, ex);
+            myconsole.textArea.append(ex.toString() + "\n");
         }
     }//GEN-LAST:event_addActionPerformed
 
     private void removeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeActionPerformed
         try {
-            String cmd = String.format("select _id from tickers where symb = %s",
+            myconsole.setVisible(true);
+            myconsole.setFocusableWindowState(true);
+            String cmd = String.format("select _id from tickers where symb = \"%s\"",
                     symbol.getText()
             );
             ResultSet rs = mystm.executeQuery(cmd);
             rs.next();
-            //CONTINUE HERE
+            int tick_id = rs.getInt(1);
+            cmd = String.format("delete from stocks where tick =%d", tick_id);
+            mystm.executeUpdate(cmd);
+            cmd = String.format("delete from tickers where symb = \"%s\"",
+                    symbol.getText()
+            );
+            myconsole.textArea.append("ticker successfully removed from the database.\n");
+            mystm.executeUpdate(cmd);
         } catch (SQLException ex) {
             Logger.getLogger(Tickermngmnt.class.getName()).log(Level.SEVERE, null, ex);
+            myconsole.textArea.append(ex.toString() + "\n");
         }
     }//GEN-LAST:event_removeActionPerformed
 

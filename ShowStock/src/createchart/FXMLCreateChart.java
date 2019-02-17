@@ -75,6 +75,7 @@ public class FXMLCreateChart implements Initializable {
     private String edate;
     private Poly poly;
     private boolean NormalView = true;
+    private ObservableList<Object> data;
 
     public FXMLCreateChart() {
         this.values = new double[10000];
@@ -95,7 +96,23 @@ public class FXMLCreateChart implements Initializable {
 
     @FXML
     private void addTicker(ActionEvent event) {
-        DatabaseManager.manageTickers(console);
+        try {
+            data = FXCollections.observableArrayList();
+            rs = stm.executeQuery("select symb from tickers order by symb;");
+            try {
+                DatabaseManager.manageTickers(console);
+                int j = 0;
+                while (rs.next()) {
+                    data.add(rs.getString("symb"));
+                    j++;
+                }
+                tickers.setItems(data);
+            } catch (SQLException ex) {
+                Logger.getLogger(FXMLCreateChart.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLCreateChart.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
@@ -203,8 +220,8 @@ public class FXMLCreateChart implements Initializable {
 
     }
 
-//    @FXML
-//    private void minimise(ActionEvent event) {
+    @FXML
+    private void minimise(ActionEvent event) {
 //        double odelta;
 //        odelta = poly.delta;
 //        int incri = 1;
@@ -233,7 +250,8 @@ public class FXMLCreateChart implements Initializable {
 //        win -= incri;
 //        window.setText(Integer.toString(win));
 //        displaydata(event);
-//    }
+    }
+    
     @FXML
     private void incrwindow(ActionEvent event) {
         String wins = window.getText();
@@ -371,7 +389,6 @@ public class FXMLCreateChart implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ObservableList<String> data;
         data = FXCollections.observableArrayList();
         try {
             console = new Console();

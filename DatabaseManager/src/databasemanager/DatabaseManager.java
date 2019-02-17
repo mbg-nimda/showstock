@@ -33,6 +33,7 @@ public class DatabaseManager {
 
     public static void manageTickers(Console console) {
         try {
+            myconsole = console;
             home = home();
             Class.forName("org.sqlite.JDBC");
             c = DriverManager
@@ -49,5 +50,4 @@ public class DatabaseManager {
         File here = new File(".");
         return here.getAbsolutePath();
     }
-
 }
