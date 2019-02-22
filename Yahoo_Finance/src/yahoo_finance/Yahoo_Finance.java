@@ -3,6 +3,7 @@
  */
 package yahoo_finance;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,6 +17,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -31,7 +33,8 @@ public class Yahoo_Finance {
     public static void main(String[] args) {
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:E:/Bolero/stocks.db");
+            c = DriverManager
+                    .getConnection(String.format("jdbc:sqlite:%s/stocks.db", home()));
             stm = c.createStatement();
             String cmd = "select symb from tickers order by symb";
             ResultSet rS = stm.executeQuery(cmd);
@@ -44,8 +47,16 @@ public class Yahoo_Finance {
             System.setProperty("webdriver.gecko.driver","E:/Selenium/geckodriver.exe");
             WebDriver browser = new FirefoxDriver();
              */
-            System.setProperty("webdriver.chrome.driver", "E:/Selenium/chromedriver.exe");
-            WebDriver browser = new ChromeDriver();
+            System.setProperty("webdriver.chrome.driver", String.format("%s/chromedriver",
+                    home()));
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("start-maximized"); // open Browser in maximized mode
+            options.addArguments("disable-infobars"); // disabling infobars
+            options.addArguments("--disable-extensions"); // disabling extensions
+            options.addArguments("--disable-gpu"); // applicable to windows os only
+            options.addArguments("--disable-dev-shm-usage"); // overcome limited resource problems
+            options.addArguments("--no-sandbox"); // Bypass OS security model
+            WebDriver browser = new ChromeDriver(options);
             WebDriverWait wait = new WebDriverWait(browser, 60);
 //		browser.get("https://finance.yahoo.com/portfolio/p_0/view/v1"); 
 //		browser.get("https://login.yahoo.com/?.src=finance&.intl=us&.done=https%3A%2F%2Ffinance.yahoo.com%2Fportfolios&add=1");
@@ -87,5 +98,10 @@ public class Yahoo_Finance {
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Yahoo_Finance.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private static String home() {
+        File here = new File(".");
+        return here.getAbsolutePath();
     }
 }
